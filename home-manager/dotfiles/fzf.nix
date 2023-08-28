@@ -1,4 +1,4 @@
-{ settings, pkgs, ... }:
+{ settings, pkgs, lib, ... }:
 
 with settings;
 {
@@ -8,16 +8,16 @@ with settings;
 
 	colors = {
 		bg  = "-1"; # default
-		fg = "#${colors.foreground}";
-		hl = "#${colors.accent}";
-		"bg+" = "-1"; # default
-		"fg+" = "#${colors.foreground}";
-		"hl+" = "#${colors.accent}";
-		info = "#${colors.accent}";
-		prompt = "#${colors.accent}";
-		spinner = "#${colors.accent}";
-		header = "#74c7ec";
+		fg = (color "foreground");
+		hl = (color "accent");
+		"bg+"   = "-1"; # default
+		"fg+"   = (color "foreground");
+		"hl+"   = (color "accent");
+		info    = (color "accent");
+		prompt  = (color "accent");
+		spinner = (color "accent");
+		header  = "#74c7ec";
 		pointer = "#f5e0dc";
-		marker = "#f5e0dc";
+		marker  = "#f5e0dc";
 	};
 }

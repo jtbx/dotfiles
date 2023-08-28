@@ -1,6 +1,6 @@
-{ home, pkgs, ... }:
+{ home, lib, pkgs, ... }:
 let
-	settings = {
+	settings = rec {
 		colors = {
 			accent = "cba6f7";
 			urgent = "f38ba8";
@@ -17,20 +17,27 @@ let
 		homeDirectory = "/home/jeremy";
 		opacity = "0.9";
 		opacityHex = "e6";
+		# functions
+		color = c: "#" + colors."${c}";
+		alphaColor = c: (color c) + opacityHex;
 	};
 	importConfig = conf: (import conf {
 		settings = settings;
 		pkgs = pkgs;
+		lib = lib;
 	});
 in
 {
 	programs = {
 		home-manager.enable = true;
-		direnv.enable = true;
+		btop   = (importConfig ./btop.nix);
+		direnv = (importConfig ./direnv.nix);
 		foot   = (importConfig ./foot.nix);
-		waybar = (importConfig ./waybar.nix);
 		fuzzel = (importConfig ./fuzzel.nix);
 		fzf    = (importConfig ./fzf.nix);
+		irssi  = (importConfig ./irssi.nix);
+		neovim = (importConfig ./neovim.nix);
+		waybar = (importConfig ./waybar.nix);
 		zsh    = (importConfig ./zsh.nix);
 	};
 	services.dunst = (importConfig ./dunst.nix);
@@ -40,10 +47,6 @@ in
 	qt  = (importConfig ./qt.nix);
 
 	home.file = (importConfig ./etc.nix);
-
-	home.shellAliases = {
-		vi = "nvim";
-	};
 
 	fonts.fontconfig.enable = true;
 }

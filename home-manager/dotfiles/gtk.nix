@@ -8,7 +8,7 @@ with settings;
 		package = pkgs.apple-cursor;
 	};
 	theme = {
-		name = "Catppuccin-Mocha-Standard-Mauve-dark";
+		name = "Catppuccin-Mocha-Standard-Blue-dark-hdpi";
 		package = pkgs.catppuccin-gtk.override {
 			variant = "mocha";
 		};

@@ -3,30 +3,34 @@
 	home.packages = with pkgs; [
 		asciinema
 		betterdiscordctl
-		cabal-install
 		cava
 		clang-tools
+		cmatrix
 		cmus
+		ddnet
 		entr
 		farge
 		ffmpeg
 		figlet
 		firefox
 		fuzzel
-		ghc
 		gimp
 		grim
 		groff
 		imagemagick
+		irssi
 		jq
 		libnotify
+		libresprite
 		lldb
 		mpg123
 		mpv
 		nodejs
+		oath-toolkit
 		obs-studio
 		obs-studio-plugins.wlrobs
 		onefetch
+		polkit_gnome
 		prismlauncher
 		rclone
 		slurp

@@ -1,137 +1,155 @@
-{ settings, pkgs, ... }:
+{ settings, pkgs, lib, ... }:
 
 with settings;
 {
 	enable = true;
 	package = (pkgs.waybar.override {
 		hyprlandSupport = true;
-		jackSupport = false;
-		mpdSupport = false;
-		mprisSupport = false;
+		#evdevSupport  = false;
+		#inputSupport  = false;
+		jackSupport   = false;
+		mpdSupport    = false;
+		mprisSupport  = false;
+		#pulseSupport  = false;
 		rfkillSupport = false;
-		traySupport = false;
-		udevSupport = false;
+		runTests      = false;
+		#sndioSupport  = false;
+		swaySupport	  = false;
+		traySupport   = false;
+		udevSupport   = false;
 		upowerSupport = false;
 	});
 
 	settings =
 	let
-		barConfig = {
+		# barConfig - create a single-module bar config
+		# using 'module' as the name of the module to use
+		# in the bar and 'attrs' as the rest of the attributes
+		# included in the bar config. 'attrs.module' is used
+		# as the configuration for the bar's only module.
+		barConfig = module: attrs: {
 			layer = "top";
 			position = "top";
 			height = 25;
 			margin-top = -25;
 			spacing = 16;
-		};
+
+			modules-center = [ module ];
+			"${module}" = attrs.module;
+		} // lib.filterAttrs (n: v: n != "module") attrs;
 	in
 	[
-		(barConfig // {
+		(barConfig "wlr/workspaces" {
 			margin-top = 22;
 			margin-left = 24;
 			margin-right = 1230;
-			modules-center = ["wlr/workspaces"];
 		
-			"wlr/workspaces" = {
+			module = {
 				format = "{icon}";
-				on-click = "activate";
 				sort-by-number = true;
 			};
 		})
-		(barConfig // {
-			margin-left = 180;
+		(barConfig "clock" {
+			margin-left = 200;
 			margin-right = 950;
-			modules-center = ["clock"];
 		
-			clock = {
+			module = {
 				format = "{:%H:%M:%S  |  %d/%m}";
 				timezone = "Pacific/Auckland";
 				interval = 1;
 			};
 		})
-		(barConfig // {
+		(barConfig "cpu" {
 			margin-left = 350;
 			margin-right = 860;
-			modules-center = ["cpu"];
-			cpu = {
+
+			module = {
 				interval = 4;
 				format = "cpu {usage}%";
 			};
 		})
-		(barConfig // {
+		(barConfig "memory" {
 			margin-left = 435;
 			margin-right = 780;
-			modules-center = ["memory"];
-			memory = {
+
+			module = {
 				interval = 5;
 				format = "{used}G";
 				max-length = 10;
 			};
 		})
-		(barConfig // {
+		(barConfig "pulseaudio" {
 			margin-left = 520;
 			margin-right = 700;
-			modules-center = ["pulseaudio"];
 		
-			pulseaudio = {
+			module = {
 				format = "snd {volume}%";
 				format-muted = "Mute";
 			};
 		})
-		(barConfig // {
+		(barConfig "cava" {
 			margin-left = 600;
 			margin-right = 580;
-			modules-center = ["cava"];
-			cava = {
-				framerate = 30;
+
+			module = {
+				framerate = 60;
 				autosens = 1;
 				sensitivity = 100;
 				bars = 16;
 				lower_cutoff_freq = 50;
 				higher_cutoff_freq = 10000;
-				method = "pulse";
-				source = "auto";
+				method = "pipewire";
+				source = "pipewire";
 				stereo = true;
 				reverse = false;
 				bar_delimiter = 0;
 				monstercat = false;
 				waves = false;
-				noise_reduction = 0.77;
 				input_delay = 2;
 				format-icons = [ "▁" "▂" "▃" "▄" "▅" "▆" "▇" "█" ];
 				actions.on-click-right = "mode";
 			};
 		})
-		(barConfig // {
+		(barConfig "disk" {
 			margin-left = 720;
-			margin-right = 400;
-			modules-center = ["disk"];
-			disk = {
+			margin-right = 410;
+
+			module = {
 				interval = 24;
 				format = "disk {used} / {total}";
 				path = "/";
 			};
 		})
-		(barConfig // {
-			margin-left = 900;
-			margin-right = 175;
-			modules-center = ["network"];
-			network = {
+		(barConfig "network" {
+			margin-left = 890;
+			margin-right = 220;
+
+			module = {
 				interface = "eno2";
-				format-ethernet = "net {bandwidthTotalBytes}  |  ip {ipaddr}";
+				format-ethernet = "net {bandwidthTotalBytes}  ip {ipaddr}";
 				format-disconnected = "network disconnected";
 			};
 		})
-		(barConfig // {
-			margin-left = 1120;
+		(barConfig "battery" {
+			margin-left = 1080;
+			margin-right = 130;
+
+			module = {
+				interval = 24;
+				format = "bat {capacity}%";
+			};
+		})
+		(barConfig "user" {
+			margin-left = 1170;
 			margin-right = 25;
-			modules-center = ["user"];
-			user = {
-				format = "up {work_H}h{work_M}m{work_S}s";
+
+			module = {
+				format = "up {work_H}h{work_M}m";
 				interval = 1;
 			};
 		})
 	];
-		style = ''
+	style = ''
 @define-color base   #1e1e2e;
 @define-color mantle #181825;
 @define-color crust  #11111b;
@@ -188,6 +206,7 @@ window#waybar {
 }
 
 #workspaces button.active {
+	font-weight: 900;
 	background-color: @base;
 	border-color: @crust;
 }

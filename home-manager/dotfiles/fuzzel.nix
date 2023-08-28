@@ -16,15 +16,19 @@ with settings;
 			inner-pad = 0;
 			vertical-pad = 10;
 		};
-		colors = {
-			background = "${colors.background}ff";
-			border = "${colors.background}ff";
-			text   = "${colors.foreground}ff";
-			selection = "${colors.accent}ff";
-			match = "${colors.accent}ff";
+		colors =
+		let
+			opaqueColor = c: (colors."${c}") + "ff";
+		in
+		{
+			background = (opaqueColor "background");
+			border     = (opaqueColor "background");
+			text       = (opaqueColor "foreground");
+			selection  = (opaqueColor "accent");
+			match      = (opaqueColor "accent");
 
-			selection-text  = "${colors.background}ff";
-			selection-match = "${colors.background}ff";
+			selection-text  = (opaqueColor "background");
+			selection-match = (opaqueColor "background");
 		};
 		border = {
 			width = 0;

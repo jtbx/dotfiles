@@ -61,6 +61,8 @@ with settings;
 		preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt
 
 		# Show current Hyprland splash
-		hyprctl splash
+		# tail -n +2 is required, cuz now hyprctl prints "adding splash" before
+		# the splash message which is pretty annoying
+		hyprctl splash | tail -n +2
 	'';
 }
